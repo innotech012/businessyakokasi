@@ -31,7 +31,7 @@ const Map = () => {
 
         const map = new H.Map(
           document.getElementById('mapContainer') as HTMLElement,
-          defaultLayers.vector.normal.map, // Ensure you are using the normal.map layer
+          defaultLayers.vector.normal.map,
           {
             center: { lat: 50, lng: 5 },
             zoom: 4,
@@ -49,10 +49,8 @@ const Map = () => {
           map.setZoom(zoom);
         };
 
-        // Move map to specific locale
         moveMapToLocation(map, 52.5159, 13.3777, 14);
 
-    
         const addMarker = (map: any, coords: { lat: number, lng: number }) => {
           const marker = new H.map.Marker(coords);
           map.addObject(marker);
@@ -80,7 +78,11 @@ const Map = () => {
     loadHereMaps();
   }, []);
 
-  return <div id="mapContainer" style={{ width: '100%', height: '500px' }} />;
+  return (
+    <div style={{ display: 'flex', justifyContent: 'flex-end', width: '100%' }}>
+      <div id="mapContainer" style={{ width: '500px', height: '500px' }} />
+    </div>
+  );
 };
 
 export default Map;
