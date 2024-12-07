@@ -24,7 +24,7 @@ const Map = () => {
         const H = (window as any).H;
 
         const platform = new H.service.Platform({
-          apikey: '6-zqCcBMPmGWLqKmBUE4gVxnPSAdE-QCfx5jvbDaYmM'
+          apikey: 'API_KEY'
         });
 
         const defaultLayers = platform.createDefaultLayers();
