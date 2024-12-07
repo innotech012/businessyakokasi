@@ -1,12 +1,12 @@
 "use client";
 
-import { useEffect } from 'react';
+import { useEffect } from "react";
 
 const Map = () => {
   useEffect(() => {
     const loadScript = (src: string) => {
       return new Promise((resolve, reject) => {
-        const script = document.createElement('script');
+        const script = document.createElement("script");
         script.src = src;
         script.onload = resolve;
         script.onerror = reject;
@@ -16,45 +16,67 @@ const Map = () => {
 
     const loadHereMaps = async () => {
       try {
-        await loadScript('https://js.api.here.com/v3/3.1/mapsjs-core.js');
-        await loadScript('https://js.api.here.com/v3/3.1/mapsjs-service.js');
-        await loadScript('https://js.api.here.com/v3/3.1/mapsjs-ui.js');
-        await loadScript('https://js.api.here.com/v3/3.1/mapsjs-mapevents.js');
+        await loadScript("https://js.api.here.com/v3/3.1/mapsjs-core.js");
+        await loadScript("https://js.api.here.com/v3/3.1/mapsjs-service.js");
+        await loadScript("https://js.api.here.com/v3/3.1/mapsjs-ui.js");
+        await loadScript("https://js.api.here.com/v3/3.1/mapsjs-mapevents.js");
 
         const H = (window as any).H;
 
         const platform = new H.service.Platform({
-          apikey: 'API_KEY'
+          apikey: "6-zqCcBMPmGWLqKmBUE4gVxnPSAdE-QCfx5jvbDaYmM",
         });
 
         const defaultLayers = platform.createDefaultLayers();
 
         const map = new H.Map(
-          document.getElementById('mapContainer') as HTMLElement,
+          document.getElementById("mapContainer") as HTMLElement,
           defaultLayers.vector.normal.map,
           {
-            center: { lat: 50, lng: 5 },
-            zoom: 4,
-            pixelRatio: window.devicePixelRatio || 1
+            center: { lat: 52.5159, lng: 13.3777 },
+            zoom: 14,
+            pixelRatio: window.devicePixelRatio || 1,
           }
         );
 
-        window.addEventListener('resize', () => map.getViewPort().resize());
+        window.addEventListener("resize", () => map.getViewPort().resize());
 
         const behavior = new H.mapevents.Behavior(new H.mapevents.MapEvents(map));
         const ui = H.ui.UI.createDefault(map, defaultLayers);
 
-        const moveMapToLocation = (map: any, lat: number, lng: number, zoom: number) => {
-          map.setCenter({ lat, lng });
-          map.setZoom(zoom);
+        const addCustomDOMMarker = (
+          map: any,
+          coords: { lat: number; lng: number },
+          number: number
+        ) => {
+          const outerDiv = document.createElement("div");
+      
+          outerDiv.style.position = "relative";
+          outerDiv.style.width = "24px";
+          outerDiv.style.height = "36px"; 
+          outerDiv.style.backgroundColor = "orange";
+          outerDiv.style.borderRadius = "50% 50% 50% 50%"; 
+          outerDiv.style.clipPath = "polygon(50% 100%, 100% 30%, 50% 0%, 0% 30%)"; 
+          outerDiv.style.border = "2px solid black";
+        
+          const innerDiv = document.createElement("div");
+          innerDiv.style.position = "absolute";
+          innerDiv.style.top = "50%";
+          innerDiv.style.left = "50%";
+          innerDiv.style.transform = "translate(-50%, -50%)"; // Keeps text centered
+          innerDiv.style.color = "black";
+          innerDiv.style.fontWeight = "bold";
+          innerDiv.style.fontSize = "12px";
+          innerDiv.style.fontFamily = "Arial, sans-serif";
+          innerDiv.innerText = number.toString();
+        
+          outerDiv.appendChild(innerDiv);
+        
+          const domIcon = new H.map.DomIcon(outerDiv);
+          const domMarker = new H.map.DomMarker(coords, { icon: domIcon });
+          map.addObject(domMarker);
         };
-
-        moveMapToLocation(map, 52.5159, 13.3777, 14);
-
-        const addMarker = (map: any, coords: { lat: number, lng: number }) => {
-          const marker = new H.map.Marker(coords);
-          map.addObject(marker);
-        };
+        
 
         const markerCoordinates = [
           { lat: 52.5159, lng: 13.3777 },
@@ -66,12 +88,14 @@ const Map = () => {
           { lat: 52.5700, lng: 13.4500 },
           { lat: 52.5800, lng: 13.4600 },
           { lat: 52.5900, lng: 13.4700 },
-          { lat: 52.6000, lng: 13.4800 }
+          { lat: 52.6000, lng: 13.4800 },
         ];
 
-        markerCoordinates.forEach(coords => addMarker(map, coords));
+        markerCoordinates.forEach((coords, index) =>
+          addCustomDOMMarker(map, coords, index + 1)
+        );
       } catch (error) {
-        console.error('Error loading HERE Maps API:', error);
+        console.error("Error loading HERE Maps API:", error);
       }
     };
 
@@ -79,8 +103,8 @@ const Map = () => {
   }, []);
 
   return (
-    <div style={{ display: 'flex', justifyContent: 'flex-end', width: '100%' }}>
-      <div id="mapContainer" style={{ width: '500px', height: '500px' }} />
+    <div style={{ display: "flex", justifyContent: "flex-end", width: "100%" }}>
+      <div id="mapContainer" style={{ width: "500px", height: "500px" }} />
     </div>
   );
 };
