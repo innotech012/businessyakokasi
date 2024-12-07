@@ -24,7 +24,7 @@ const Map = () => {
         const H = (window as any).H;
 
         const platform = new H.service.Platform({
-          apikey: 'YOUR_API_KEY'
+          apikey: '6-zqCcBMPmGWLqKmBUE4gVxnPSAdE-QCfx5jvbDaYmM'
         });
 
         const defaultLayers = platform.createDefaultLayers();
@@ -50,6 +50,23 @@ const Map = () => {
         };
 
         moveMapToBerlin(map);
+
+        
+        const addMarkersToMap = (map: any) => {
+          const berlinMarker = new H.map.Marker({ lat: 52.5159, lng: 13.3777 });
+          map.addObject(berlinMarker);
+          console.log('Berlin marker added');
+
+          const anotherMarker = new H.map.Marker({ lat: 52.5200, lng: 13.4050 });
+          map.addObject(anotherMarker);
+          console.log('Another marker added');
+
+          const customMarker = new H.map.Marker({ lat: 52.5300, lng: 13.4100 });
+          map.addObject(customMarker);
+          console.log('Custom marker added');
+        };
+
+        addMarkersToMap(map);
       } catch (error) {
         console.error('Error loading HERE Maps API:', error);
       }
